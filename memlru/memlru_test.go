@@ -193,23 +193,19 @@ func TestNullObject(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var keys = []string{
-		"test-obj3-a", "test-obj3-b",
-	}
+	var keys = "test-obj3-a"
 
-	var in = []*obj{}
+	var in = obj{}
 
 	ctx := context.Background()
-	err = cache.BatchSet(ctx, keys, in)
+	err = cache.Set(ctx, keys, &in)
 	require.NoError(t, err)
 
-	// adding some keys which will not exist
-	fetchKeys := []string{"no1"}
-	fetchKeys = append(fetchKeys, keys...)
-	fetchKeys = append(fetchKeys, []string{"no2", "no3"}...)
-
-	out, exists, err := cache.BatchGet(ctx, fetchKeys)
+	out, exists, err := cache.Get(ctx, keys)
 	require.NoError(t, err)
-	require.Equal(t, []*obj{nil, in[0], in[1], nil, nil}, out)
-	require.Equal(t, []bool{false, true, true, false, false}, exists)
+	fmt.Println("exists:", exists)
+	require.True(t, exists)
+	require.Equal(t, &in, out)
+	// require.Equal(t, []*obj{nil, in[0], in[1], nil, nil}, out)
+	// require.Equal(t, []bool{false, true, true, false, false}, exists)
 }
