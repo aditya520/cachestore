@@ -203,9 +203,46 @@ func TestNullObject(t *testing.T) {
 
 	out, exists, err := cache.Get(ctx, keys)
 	require.NoError(t, err)
-	fmt.Println("exists:", exists)
 	require.True(t, exists)
 	require.Equal(t, &in, out)
-	// require.Equal(t, []*obj{nil, in[0], in[1], nil, nil}, out)
-	// require.Equal(t, []bool{false, true, true, false, false}, exists)
+}
+
+func TestNullValue(t *testing.T) {
+	cache, err := NewWithSize[*int](50)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var keys = "test-obj3-a"
+
+	var in *int
+
+	ctx := context.Background()
+	err = cache.Set(ctx, keys, in)
+	require.NoError(t, err)
+
+	out, exists, err := cache.Get(ctx, keys)
+	require.NoError(t, err)
+	require.True(t, exists)
+	require.Equal(t, in, out)
+}
+
+func TestNullSlice(t *testing.T) {
+	cache, err := NewWithSize[[]int](50)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var keys = "test-obj3-a"
+
+	var in []int
+
+	ctx := context.Background()
+	err = cache.Set(ctx, keys, in)
+	require.NoError(t, err)
+
+	out, exists, err := cache.Get(ctx, keys)
+	require.NoError(t, err)
+	require.True(t, exists)
+	require.Equal(t, in, out)
 }
